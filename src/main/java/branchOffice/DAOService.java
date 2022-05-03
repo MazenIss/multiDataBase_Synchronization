@@ -1,4 +1,4 @@
-package bo;
+package branchOffice;
 
 import commun.Product;
 

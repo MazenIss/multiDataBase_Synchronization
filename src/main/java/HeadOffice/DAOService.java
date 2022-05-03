@@ -1,4 +1,4 @@
-package ho;
+package HeadOffice;
 
 
 import commun.Product;

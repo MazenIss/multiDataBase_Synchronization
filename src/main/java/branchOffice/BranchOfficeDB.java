@@ -1,7 +1,5 @@
-package bo;
+package branchOffice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -18,7 +16,7 @@ import java.util.concurrent.TimeoutException;
 import static commun.Serialize.serialize;
 
 
-public class mainTaskBO {
+public class BranchOfficeDB {
     public final static String QUEUE_NAME="product_sale_queue";
     public static void main(String[] args) throws IOException, SQLException {
 
