@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeoutException;
 
 import static commun.Serialize.serialize;
@@ -26,27 +24,42 @@ public class BranchOfficeDB {
         ConnectionFactory connectionFactory = new ConnectionFactory();
         connectionFactory.setHost("localhost");
 
-        TimerTask task = new TimerTask() {
-            public void run(){
-                try {
-                    List<Product> productList = service.getNonSyncedProducts();
-                    String message = serialize(productList);
-                    if(productList.size()>0) {
-                        try (Connection connection = connectionFactory.newConnection()) {
-                            Channel channel = connection.createChannel();
-                            channel.queueDeclare(QUEUE_NAME + Integer.toString(DBNumber), false, false, false, null);
+        // TimerTask task = new TimerTask() {
+        //     public void run(){
+        //         try {
+        //             List<Product> productList = service.getNonSyncedProducts();
+        //             String message = serialize(productList);
+        //             if(productList.size()>0) {
+        //                 try (Connection connection = connectionFactory.newConnection()) {
+        //                     Channel channel = connection.createChannel();
+        //                     channel.queueDeclare(QUEUE_NAME + Integer.toString(DBNumber), false, false, false, null);
+        //                     channel.basicPublish("", QUEUE_NAME + Integer.toString(DBNumber), null, message.getBytes());
+        //                     System.out.println(" [x] sent '" + message + "' at " + LocalDateTime.now().toString());
+        //                     service.updateSyncedProducts(productList);
+        //                 } catch (TimeoutException | IOException e) {
+        //                     e.printStackTrace();
+        //                 }
+        //             }
+        //         } catch (Exception e){ e.printStackTrace(); }
+        //     }
+        // };
+        // Timer timer = new Timer("Sync");
+        // timer.schedule(task,0, 1000L);
 
-                            channel.basicPublish("", QUEUE_NAME + Integer.toString(DBNumber), null, message.getBytes());
-                            System.out.println(" [x] sent '" + message + "' at " + LocalDateTime.now().toString());
-                            service.updateSyncedProducts(productList);
-                        } catch (TimeoutException | IOException e) {
-                            e.printStackTrace();
+                    try {
+                        List<Product> productList = service.getNonSyncedProducts();
+                        String message = serialize(productList);
+                        if(productList.size()>0) {
+                            try (Connection connection = connectionFactory.newConnection()) {
+                                Channel channel = connection.createChannel();
+                                channel.queueDeclare(QUEUE_NAME + Integer.toString(DBNumber), false, false, false, null);
+                                channel.basicPublish("", QUEUE_NAME + Integer.toString(DBNumber), null, message.getBytes());
+                                System.out.println(" [x] sent '" + message + "' at " + LocalDateTime.now().toString());
+                                service.updateSyncedProducts(productList);
+                            } catch (TimeoutException | IOException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                } catch (Exception e){ e.printStackTrace(); }
-            }
-        };
-        Timer timer = new Timer("Sync");
-        timer.schedule(task,0, 60*1000L);
+                    } catch (Exception e){ e.printStackTrace(); }
     }
 }

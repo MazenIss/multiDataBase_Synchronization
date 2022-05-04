@@ -3,6 +3,7 @@ package HeadOffice;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
@@ -32,8 +33,18 @@ public class HeadOfficeDB {
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             String receivedMessage = new String(delivery.getBody(), StandardCharsets.UTF_8);
             List<Product> productList = deserialize(receivedMessage);
+            System.out.println(productList);
+            List<Product> toInsert = new ArrayList<Product>();
+            List<Product> toUpdate = new ArrayList<Product>();
+            for(Product p :productList){
+                if(p.getUpdated()==1)
+                    toUpdate.add(p);
+                else
+                    toInsert.add(p);
+            }
             try {
-                service.insert(productList);
+                service.insert(toInsert);
+                service.update(toUpdate);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

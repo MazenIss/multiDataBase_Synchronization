@@ -1,4 +1,8 @@
-ho/DAOService.class
-commun/Product.class
-ho/mainTask.class
-commun/Serialize.class
+commun\Product.class
+commun\Serialize$1.class
+HeadOffice\HeadOfficeDB.class
+branchOffice\DAOService.class
+commun\Serialize.class
+branchOffice\BranchOfficeDB.class
+HeadOffice\DAOService.class
+branchOffice\BranchOfficeDB$1.class

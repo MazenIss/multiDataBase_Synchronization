@@ -14,6 +14,16 @@ public class Product {
     private double total;
     private int dbNumber;
 
+    public int getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(int updated) {
+        this.updated = updated;
+    }
+
+    private int updated;
+
     public Product(int id, Date date, String region, String product, int qty, float cost, double amt, float tax, double total, int dbNumber) {
         this.id = id;
         this.date = date;
